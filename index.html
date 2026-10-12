@@ -1,0 +1,777 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Una sorpresa para ti 💗</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: "Trebuchet MS", Arial, sans-serif;
+    text-align: center;
+    color: #ad72a7;
+    background: linear-gradient(120deg, #fff8fc, #f1f5ff);
+    overflow-x: hidden;
+}
+
+.screen {
+    display: none;
+    min-height: 100vh;
+    padding: 35px 15px 115px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.screen.active {
+    display: flex;
+    animation: fadeIn .7s ease;
+}
+
+.content {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+}
+
+h1 {
+    color: #c53d7d;
+    font-size: clamp(30px, 5vw, 48px);
+    margin: 8px 0;
+}
+
+h2 {
+    color: #c53d7d;
+}
+
+.subtitle {
+    font-size: clamp(17px, 2.5vw, 23px);
+    font-weight: bold;
+    margin: 25px 0 32px;
+}
+
+button {
+    border: none;
+    border-radius: 35px;
+    background: linear-gradient(135deg, #ff9bc9, #e95d9e);
+    color: white;
+    padding: 15px 24px;
+    font-size: 16px;
+    font-weight: bold;
+    font-family: inherit;
+    cursor: pointer;
+    box-shadow: 0 5px 0 #d74f91;
+    transition: .25s;
+    margin: 12px 5px;
+}
+
+button:hover {
+    transform: translateY(-3px);
+}
+
+/* CONFETI */
+
+.confetti {
+    position: fixed;
+    top: -30px;
+    z-index: 0;
+    pointer-events: none;
+    animation: fall linear infinite;
+}
+
+@keyframes fall {
+    to {
+        transform: translateY(110vh) rotate(720deg);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* REGALO */
+
+.gift-card {
+    width: min(560px, 95%);
+    min-height: 365px;
+    margin: auto;
+    padding: 25px;
+    border: 4px dashed #ffb4dc;
+    border-radius: 42px;
+    background: rgba(255,255,255,.8);
+    box-shadow: 0 15px 55px #c8a3c72b;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: .3s;
+}
+
+.gift-card:hover {
+    transform: scale(1.025);
+}
+
+.gift {
+    font-size: 125px;
+    animation: bounce 2s infinite;
+}
+
+.open-text {
+    color: #c53d7d;
+    font-size: clamp(30px, 4vw, 42px);
+    font-weight: bold;
+    margin-top: 15px;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+/* CARTA GRANDE */
+
+.letter {
+    width: min(850px, 96%);
+    max-height: 76vh;
+    overflow-y: auto;
+    margin: auto;
+    padding: clamp(25px, 5vw, 55px);
+    background: rgba(255,255,255,.9);
+    border: 4px dashed #ffb4dc;
+    border-radius: 40px;
+    box-shadow: 0 15px 55px #c8a3c72b;
+}
+
+.letter h2 {
+    font-size: clamp(25px, 3.5vw, 34px);
+    margin: 0 0 30px;
+}
+
+.letter p {
+    font-size: clamp(20px, 2.5vw, 27px);
+    line-height: 1.8;
+    font-weight: bold;
+    margin: 0 0 30px;
+    color: #ad72a7;
+}
+
+.letter .signature {
+    color: #c53d7d;
+    font-size: clamp(24px, 3vw, 31px);
+}
+
+/* PASTEL */
+
+.cake-scene {
+    position: relative;
+    height: 350px;
+    width: min(390px, 95vw);
+    margin: 15px auto;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+.cake {
+    width: 310px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    position: relative;
+}
+
+.plate {
+    width: 310px;
+    height: 23px;
+    border-radius: 50%;
+    background: white;
+    border: 3px solid #f6b0d0;
+    box-shadow: 0 5px 0 #e8a1c5;
+}
+
+.layer {
+    height: 0;
+    opacity: 0;
+    transform: translateY(20px) scale(.8);
+    transition: .65s ease;
+    flex-shrink: 0;
+    position: relative;
+    border: 3px solid #e99abc;
+    border-radius: 12px 12px 7px 7px;
+    background: repeating-linear-gradient(
+        0deg,
+        #ffb7d1 0 15px,
+        #ffe5ee 15px 29px
+    );
+    box-shadow: inset 0 -6px #f39cbe;
+}
+
+.layer.show {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+.layer.one { width: 260px; }
+.layer.two { width: 215px; }
+.layer.three { width: 165px; }
+
+.icing {
+    position: absolute;
+    height: 20px;
+    top: -8px;
+    left: -2px;
+    right: -2px;
+    border-radius: 50%;
+    background: #fff8fd;
+    border: 2px solid #f6c1d8;
+}
+
+.candles {
+    height: 0;
+    opacity: 0;
+    display: flex;
+    gap: 17px;
+    justify-content: center;
+    transition: .5s;
+    z-index: 3;
+}
+
+.candles.show {
+    height: 48px;
+    opacity: 1;
+}
+
+.candle {
+    width: 11px;
+    height: 39px;
+    border-radius: 4px;
+    background: repeating-linear-gradient(
+        45deg,
+        white 0 5px,
+        #ff76a8 5px 10px
+    );
+    position: relative;
+}
+
+.flame {
+    position: absolute;
+    top: -19px;
+    width: 11px;
+    height: 17px;
+    border-radius: 50%;
+    background: #ffc84c;
+    box-shadow: 0 0 14px #ffcb62;
+    animation: flicker .7s infinite alternate;
+}
+
+@keyframes flicker {
+    from { transform: rotate(-5deg); }
+    to { transform: rotate(5deg) scale(1.12); }
+}
+
+/* SNOOPY */
+
+.snoopy {
+    width: 220px;
+    position: absolute;
+    z-index: 5;
+    top: 0;
+    left: 50%;
+    opacity: 0;
+    transform: translate(-50%, 40px) scale(.5);
+    transition: .9s cubic-bezier(.2,.8,.3,1.3);
+    pointer-events: none;
+}
+
+.snoopy.show {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+}
+
+#cakeMessage {
+    display: none;
+    font-size: 22px;
+    line-height: 1.7;
+    padding: 15px;
+}
+
+#cakeMessage.show {
+    display: block;
+    animation: fadeIn 1s ease;
+}
+
+/* REPRODUCTOR DE MÚSICA */
+
+.music-player {
+    position: fixed;
+    z-index: 100;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(390px, calc(100% - 24px));
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    background: rgba(255,255,255,.96);
+    border: 2px solid #ffb4dc;
+    border-radius: 24px;
+    box-shadow: 0 8px 25px #c78bb52b;
+    backdrop-filter: blur(10px);
+}
+
+.music-icon {
+    font-size: 27px;
+    animation: musicBounce 1.5s infinite;
+}
+
+.music-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    gap: 4px;
+    flex: 1;
+    min-width: 0;
+}
+
+.music-info strong {
+    color: #c53d7d;
+    font-size: 13px;
+}
+
+.music-info span {
+    color: #ad72a7;
+    font-size: 11px;
+}
+
+.music-player button {
+    margin: 0;
+    padding: 11px 13px;
+    font-size: 12px;
+    white-space: nowrap;
+    box-shadow: 0 3px 0 #d74f91;
+}
+
+@keyframes musicBounce {
+    0%, 100% { transform: rotate(0); }
+    50% { transform: rotate(12deg); }
+}
+
+@media(max-width: 500px) {
+    .screen {
+        padding: 25px 12px 110px;
+    }
+
+    .gift-card {
+        min-height: 310px;
+    }
+
+    .gift {
+        font-size: 105px;
+    }
+
+    .letter {
+        max-height: 70vh;
+        border-radius: 28px;
+    }
+
+    .cake-scene {
+        transform: scale(.9);
+        transform-origin: top center;
+    }
+
+    .music-player {
+        gap: 8px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- MÚSICA: APARECE EN TODAS LAS PANTALLAS -->
+
+<div class="music-player">
+    <span class="music-icon">🎵</span>
+
+    <div class="music-info">
+        <strong>Tu cancion mi pumpleañera🎂👸🏽x</strong>
+        <span id="musicStatus">Una canción para ti</span>
+    </div>
+
+    <button id="musicButton" onclick="toggleMusic()">
+        ▶ Reproducir
+    </button>
+
+    <audio id="birthdayMusic" loop preload="auto">
+        <source src="pumpleanos.mp3" type="audio/mpeg">
+        Tu navegador no puede reproducir este audio.
+    </audio>
+</div>
+
+<!-- PANTALLA 1: REGALO -->
+
+<section class="screen active" id="screenGift">
+    <div class="content">
+        <h1>🎂 ¡Feliz Cumpleaños mi bebe lindaa! 🎂</h1>
+
+        <p class="subtitle">
+            🎉 Toca la tarjeta para ver tu sorpresa 🎉
+        </p>
+
+        <div class="gift-card" onclick="openGift()">
+            <div class="gift">🎁</div>
+            <div class="open-text">Ábreme</div>
+        </div>
+    </div>
+</section>
+
+<!-- PANTALLA 2: CARTA -->
+
+<section class="screen" id="screenLetter">
+    <div class="content">
+        <article class="letter">
+            <h2>¡Feliz cumpleaños mi amor! 🥰🤎</h2>
+
+            <p>
+                Un 13 de Octubre de 2006 estaba naciendo la bebe mas lindaa
+                del mundo, la cual ahora es mi princesa, mi bebe consentida,
+                y el amor de esta y mil vidas miass.
+            </p>
+
+            <p>
+                Espero que cumplas muchos mas al lado de las personas que
+                te amamos,le doy gracias a Dios por ponerte en mi vida y hacerme
+                el hombre mas feliz del mundo, por siempre sacarme una sonrisa
+                y hacerme sentir amado.
+            </p>
+
+            <p>
+                Que mi Diosito cumpla los deseos de tu corazon, te llene de vida
+                y muy buena salud, para grandes cosas Dios te trajo a este mundo amor
+                y yo quiero acompañarte en cada una de ellas.
+            </p>
+
+            <p>
+                Ojalá podamos seguir creando recuerdos, compartiendo risas
+                y disfrutando de muchos momentos juntos. Le pido a Dios
+                una familia a tu lado, y muchos cumpleaños mas juntos, TE AMO
+                CON TODA MI ALMA.❤️‍🩹
+            </p>
+
+            <p class="signature">
+                ¡Te deseo lo más bonito del mundo! 🤎
+            </p>
+        </article>
+
+        <button onclick="goToCake()">
+            🎂 Tengo otra sorpresa para ti
+        </button>
+    </div>
+</section>
+
+<!-- PANTALLA 3: PASTEL -->
+
+<section class="screen" id="screenCake">
+    <div class="content">
+        <h1>Un pastelito para ti 🎂</h1>
+
+        <p class="subtitle" id="cakeSubtitle">
+            Vamos a prepararlo juntos 🤎
+        </p>
+
+        <div class="cake-scene">
+
+            <!-- SNOOPY -->
+            <div class="snoopy" id="snoopy">
+                <svg viewBox="0 0 220 180" width="100%"
+                     xmlns="http://www.w3.org/2000/svg">
+
+                    <path d="M75 48 C40 25 33 82 57 111
+                             C72 128 91 91 83 63Z"
+                          fill="#25252d"/>
+
+                    <ellipse cx="113" cy="125" rx="42" ry="29"
+                             fill="white" stroke="#30303a" stroke-width="3"/>
+
+                    <ellipse cx="92" cy="147" rx="21" ry="9"
+                             fill="white" stroke="#30303a" stroke-width="3"/>
+
+                    <ellipse cx="137" cy="147" rx="21" ry="9"
+                             fill="white" stroke="#30303a" stroke-width="3"/>
+
+                    <ellipse cx="105" cy="68" rx="43" ry="39"
+                             fill="white" stroke="#30303a" stroke-width="3"/>
+
+                    <ellipse cx="133" cy="83" rx="32" ry="20"
+                             fill="white" stroke="#30303a" stroke-width="3"/>
+
+                    <ellipse cx="160" cy="74" rx="10" ry="7"
+                             fill="#25252d"/>
+
+                    <ellipse cx="99" cy="61" rx="4" ry="6"
+                             fill="#25252d"/>
+
+                    <ellipse cx="121" cy="62" rx="4" ry="6"
+                             fill="#25252d"/>
+
+                    <path d="M122 91 Q136 103 149 91"
+                          fill="none" stroke="#30303a"
+                          stroke-width="2.5" stroke-linecap="round"/>
+
+                    <path d="M78 103 Q103 117 131 105"
+                          fill="none" stroke="#e94f83"
+                          stroke-width="9" stroke-linecap="round"/>
+
+                    <path d="M83 113 Q61 119 68 94"
+                          fill="none" stroke="#30303a"
+                          stroke-width="12" stroke-linecap="round"/>
+
+                    <path d="M83 113 Q61 119 68 94"
+                          fill="none" stroke="white"
+                          stroke-width="7" stroke-linecap="round"/>
+
+                    <circle cx="92" cy="79" r="5" fill="#ffb3ca"/>
+                    <circle cx="143" cy="91" r="5" fill="#ffb3ca"/>
+
+                    <path d="M183 24 C171 10 153 29 183 47
+                             C213 29 195 10 183 24Z"
+                          fill="#ff76a8"/>
+                </svg>
+            </div>
+
+            <div class="cake">
+                <div class="candles" id="candles">
+                    <div class="candle"><div class="flame"></div></div>
+                    <div class="candle"><div class="flame"></div></div>
+                    <div class="candle"><div class="flame"></div></div>
+                </div>
+
+                <div class="layer three" id="layer3">
+                    <div class="icing"></div>
+                </div>
+
+                <div class="layer two" id="layer2">
+                    <div class="icing"></div>
+                </div>
+
+                <div class="layer one" id="layer1">
+                    <div class="icing"></div>
+                </div>
+
+                <div class="plate"></div>
+            </div>
+        </div>
+
+        <div id="cakeMessage">
+            <h2>¡Sorpresa,Snoopy te envia Feliz cumpleaños🥺!</h2>
+            Espero que hoy la pases bien y que todos tus deseos
+            bonitos se hagan realidad. ¡Feliz cumpleaños mi vidaa! 🎂🤎✨
+        </div>
+
+        <button id="cakeButton" onclick="nextStep()">
+            ✨ Construir mi pastel
+        </button>
+
+        <p id="counter">Paso 0 de 5</p>
+    </div>
+</section>
+
+<script>
+// CONFETI DE FONDO
+
+const symbols = ["🎉", "✨", "💕", "🎈", "🐾", "💗", "🎊"];
+
+for (let i = 0; i < 48; i++) {
+    const item = document.createElement("span");
+    item.className = "confetti";
+    item.textContent =
+        symbols[Math.floor(Math.random() * symbols.length)];
+
+    item.style.left = Math.random() * 100 + "vw";
+    item.style.animationDuration = (5 + Math.random() * 9) + "s";
+    item.style.animationDelay = (-Math.random() * 12) + "s";
+    item.style.fontSize = (12 + Math.random() * 13) + "px";
+
+    document.body.appendChild(item);
+}
+
+// CAMBIAR DE PANTALLA
+
+function showScreen(id) {
+    document.querySelectorAll(".screen").forEach(screen => {
+        screen.classList.remove("active");
+    });
+
+    document.getElementById(id).classList.add("active");
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+}
+
+function openGift() {
+    showScreen("screenLetter");
+}
+
+function goToCake() {
+    showScreen("screenCake");
+}
+
+// REPRODUCTOR DE MÚSICA
+
+const music = document.getElementById("birthdayMusic");
+const musicButton = document.getElementById("musicButton");
+const musicStatus = document.getElementById("musicStatus");
+
+async function toggleMusic() {
+    if (music.paused) {
+        try {
+            await music.play();
+
+            musicButton.textContent = "⏸ Pausar";
+            musicStatus.textContent = "Reproduciendo 💕";
+        } catch (error) {
+            musicStatus.textContent =
+                "No se pudo reproducir. Revisa musica.mp3";
+        }
+    } else {
+        music.pause();
+
+        musicButton.textContent = "▶ Reproducir";
+        musicStatus.textContent = "Música pausada";
+    }
+}
+
+// CONSTRUCCIÓN DEL PASTEL
+
+let step = 0;
+
+function nextStep() {
+    step++;
+
+    if (step === 1) {
+        showLayer("layer1", 85);
+
+        document.getElementById("cakeButton").textContent =
+            "🍰 Agregar otro piso";
+
+    } else if (step === 2) {
+        showLayer("layer2", 65);
+
+        document.getElementById("cakeButton").textContent =
+            "🎂 Agregar el último piso";
+
+    } else if (step === 3) {
+        showLayer("layer3", 50);
+
+        document.getElementById("cakeButton").textContent =
+            "🕯️ Poner las velitas";
+
+    } else if (step === 4) {
+        document.getElementById("candles").classList.add("show");
+
+        document.getElementById("cakeButton").textContent =
+            "💖 Descubrir la sorpresa";
+
+    } else if (step === 5) {
+        document.getElementById("snoopy").classList.add("show");
+
+        document.getElementById("cakeMessage").classList.add("show");
+
+        document.getElementById("cakeSubtitle").textContent =
+            "¡Lo terminamos! Mira quién vino 🐶";
+
+        document.getElementById("cakeButton").textContent =
+            "🎉 Volver a empezar";
+
+        celebrate();
+
+    } else {
+        resetCake();
+        return;
+    }
+
+    document.getElementById("counter").textContent =
+        `Paso ${Math.min(step, 5)} de 5`;
+}
+
+function showLayer(id, height) {
+    const layer = document.getElementById(id);
+
+    layer.style.height = height + "px";
+
+    requestAnimationFrame(() => {
+        layer.classList.add("show");
+    });
+}
+
+// CELEBRACIÓN FINAL
+
+function celebrate() {
+    for (let i = 0; i < 35; i++) {
+        const heart = document.createElement("span");
+
+        heart.className = "confetti";
+        heart.textContent = ["💗", "💕", "✨", "🎉", "🐾"][
+            Math.floor(Math.random() * 5)
+        ];
+
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.animationDuration = (3 + Math.random() * 4) + "s";
+        heart.style.fontSize = (18 + Math.random() * 18) + "px";
+
+        document.body.appendChild(heart);
+
+        setTimeout(() => heart.remove(), 7500);
+    }
+}
+
+// REINICIAR EL PASTEL
+
+function resetCake() {
+    step = 0;
+
+    ["layer1", "layer2", "layer3"].forEach(id => {
+        const layer = document.getElementById(id);
+
+        layer.classList.remove("show");
+        layer.style.height = "0";
+    });
+
+    document.getElementById("candles").classList.remove("show");
+    document.getElementById("snoopy").classList.remove("show");
+    document.getElementById("cakeMessage").classList.remove("show");
+
+    document.getElementById("cakeSubtitle").textContent =
+        "Vamos a prepararlo juntos 💗";
+
+    document.getElementById("cakeButton").textContent =
+        "✨ Construir mi pastel";
+
+    document.getElementById("counter").textContent = "Paso 0 de 5";
+}
+</script>
+
+</body>
+</html>
+```
